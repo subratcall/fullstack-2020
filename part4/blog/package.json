@@ -4,9 +4,9 @@
 	"description": "Blog list application",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node index.js",
-		"dev": "nodemon index.js"
+		"dev": "nodemon index.js",
+		"test": "jest --verbose"
 	},
 	"author": "Thivagar Nadarajan",
 	"license": "ISC",
@@ -17,6 +17,10 @@
 		"mongoose": "^5.9.19"
 	},
 	"devDependencies": {
+		"jest": "^26.0.1",
 		"nodemon": "^2.0.4"
+	},
+	"jest": {
+		"testEnvironment": "node"
 	}
 }
