@@ -6,4 +6,11 @@ const totalLikes = blogs => {
 	return likes.reduce(sum, 0)
 }
 
-module.exports = { dummy, totalLikes }
+const favouriteBlog = blogs => {
+	const likes = blogs.map(blog => blog.likes)
+	return blogs.length === 0
+		? 0
+		: Math.max(...likes)
+}
+
+module.exports = { dummy, totalLikes, favouriteBlog }
