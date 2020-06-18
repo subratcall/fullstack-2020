@@ -37,9 +37,30 @@ test('blog-api post', async () => {
 
 	const newList = await Blog.find({})
 	expect(newList.length).toBe(initialBlogs.length + 1)
-
 })
 
+test('blog-api likes default 0', async () => {
+	await Blog.deleteMany({})
+	const newBlog = { author: "Thivagar" }
+	await api
+		.post('/api/blogs').send(newBlog)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+
+	const newList = await Blog.find({})
+	expect(newList.length).toBe(1)
+	expect(newList[0].likes).toBe(0)
+})
+
+test('blog-api url & title missing', async () => {
+	const newBlog = { author: "Thivagar", likes: 0 }
+	await api
+		.post('/api/blogs').send(newBlog)
+		.expect(400)
+
+	const newList = await Blog.find({})
+	expect(newList.length).toBe(initialBlogs.length)
+})
 
 afterAll(() => {
 	mongoose.connection.close()
