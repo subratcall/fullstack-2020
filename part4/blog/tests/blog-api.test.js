@@ -21,6 +21,13 @@ test('blog-api get all blogs', async () => {
 	expect(res.body.length).toBe(6)
 })
 
+test('blog-api id property', async () => {
+	const res = await api.get('/api/blogs')
+	for (let blog of res.body) {
+		expect(blog.id).toBeDefined()
+	}
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
