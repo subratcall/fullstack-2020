@@ -62,6 +62,25 @@ test('blog-api url & title missing', async () => {
 	expect(newList.length).toBe(initialBlogs.length)
 })
 
+test('blog-api delete', async () => {
+	await api
+		.delete('/api/blogs/5a422a851b54a676234d17f7')
+		.expect(204)
+
+	const newList = await Blog.find({})
+	expect(newList.length).toBe(initialBlogs.length - 1)
+})
+
+test('blog-api put', async () => {
+	const blog = { author: "Thivagar", url: "google.ca", title: "Blog" }
+
+	await api
+		.put('/api/blogs/5a422a851b54a676234d17f7')
+		.send(blog)
+		.expect(200)
+
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
