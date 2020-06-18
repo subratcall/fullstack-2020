@@ -16,7 +16,7 @@ beforeEach(async () => {
 	}
 })
 
-test('blog-api get all blogs', async () => {
+test('blog-api get all', async () => {
 	const res = await api.get('/api/blogs')
 	expect(res.body.length).toBe(6)
 })
@@ -27,6 +27,19 @@ test('blog-api id property', async () => {
 		expect(blog.id).toBeDefined()
 	}
 })
+
+test('blog-api post', async () => {
+	const newBlog = { author: "Thivagar", likes: 0 }
+	await api
+		.post('/api/blogs').send(newBlog)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+
+	const newList = await Blog.find({})
+	expect(newList.length).toBe(initialBlogs.length + 1)
+
+})
+
 
 afterAll(() => {
 	mongoose.connection.close()
