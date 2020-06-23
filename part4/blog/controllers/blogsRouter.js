@@ -1,12 +1,12 @@
-const router = require('express').Router()
+const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-router.get('/', async (req, res) => {
+blogsRouter.get('/', async (req, res) => {
 	const blogs = await Blog.find({})
 	res.json(blogs)
 })
 
-router.post('/', async (req, res) => {
+blogsRouter.post('/', async (req, res) => {
 	if (!req.body.title || !req.body.url) {
 		return res.status(400).end()
 	}
@@ -20,12 +20,12 @@ router.post('/', async (req, res) => {
 	res.status(201).json(result)
 })
 
-router.delete('/:id', async (req, res) => {
+blogsRouter.delete('/:id', async (req, res) => {
 	await Blog.findByIdAndRemove(req.params.id)
 	res.status(204).end()
 })
 
-router.put('/:id', async (req, res) => {
+blogsRouter.put('/:id', async (req, res) => {
 	if (!req.body.title || !req.body.url) {
 		return res.status(400).end()
 	}
@@ -38,4 +38,4 @@ router.put('/:id', async (req, res) => {
 	res.status(200).json(result)
 })
 
-module.exports = router
+module.exports = blogsRouter

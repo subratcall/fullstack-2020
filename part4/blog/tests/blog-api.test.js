@@ -29,7 +29,7 @@ test('blog-api id property', async () => {
 })
 
 test('blog-api post', async () => {
-	const newBlog = { author: "Thivagar", likes: 0 }
+	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca", likes: 0 }
 	await api
 		.post('/api/blogs').send(newBlog)
 		.expect(201)
@@ -41,7 +41,7 @@ test('blog-api post', async () => {
 
 test('blog-api likes default 0', async () => {
 	await Blog.deleteMany({})
-	const newBlog = { author: "Thivagar" }
+	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca" }
 	await api
 		.post('/api/blogs').send(newBlog)
 		.expect(201)
