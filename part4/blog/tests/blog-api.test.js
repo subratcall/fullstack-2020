@@ -28,10 +28,32 @@ test('blog-api id property', async () => {
 	}
 })
 
-test('blog-api post', async () => {
+test('blog-api no token post', async () => {
+	const res = await api
+		.post('/api/login')
+		.send({ username: "root", password: "pass" })
+		.expect(200)
+
 	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca", likes: 0 }
 	await api
 		.post('/api/blogs').send(newBlog)
+		.expect(401)
+
+	const newList = await Blog.find({})
+	expect(newList.length).toBe(initialBlogs.length)
+})
+
+test('blog-api post', async () => {
+	const res = await api
+		.post('/api/login')
+		.send({ username: "root", password: "pass" })
+		.expect(200)
+
+
+	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca", likes: 0 }
+	await api
+		.post('/api/blogs').send(newBlog)
+		.set('Authorization', `bearer ${res.body.token}`)
 		.expect(201)
 		.expect('Content-Type', /application\/json/)
 
@@ -41,9 +63,15 @@ test('blog-api post', async () => {
 
 test('blog-api likes default 0', async () => {
 	await Blog.deleteMany({})
+	const res = await api
+		.post('/api/login')
+		.send({ username: "root", password: "pass" })
+		.expect(200)
+
 	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca" }
 	await api
 		.post('/api/blogs').send(newBlog)
+		.set('Authorization', `bearer ${res.body.token}`)
 		.expect(201)
 		.expect('Content-Type', /application\/json/)
 
@@ -53,9 +81,15 @@ test('blog-api likes default 0', async () => {
 })
 
 test('blog-api url & title missing', async () => {
+	const res = await api
+		.post('/api/login')
+		.send({ username: "root", password: "pass" })
+		.expect(200)
+
 	const newBlog = { author: "Thivagar", likes: 0 }
 	await api
 		.post('/api/blogs').send(newBlog)
+		.set('Authorization', `bearer ${res.body.token}`)
 		.expect(400)
 
 	const newList = await Blog.find({})
@@ -63,12 +97,25 @@ test('blog-api url & title missing', async () => {
 })
 
 test('blog-api delete', async () => {
+	const loginRes = await api
+		.post('/api/login')
+		.send({ username: "root", password: "pass" })
+		.expect(200)
+
+	const newBlog = { author: "Thivagar", title: "Book", url: "google.ca" }
+	const postRes = await api
+		.post('/api/blogs').send(newBlog)
+		.set('Authorization', `bearer ${loginRes.body.token}`)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+
 	await api
-		.delete('/api/blogs/5a422a851b54a676234d17f7')
+		.delete(`/api/blogs/${postRes.body.id}`)
+		.set('Authorization', `bearer ${loginRes.body.token}`)
 		.expect(204)
 
 	const newList = await Blog.find({})
-	expect(newList.length).toBe(initialBlogs.length - 1)
+	expect(newList.length).toBe(initialBlogs.length)
 })
 
 test('blog-api put', async () => {
