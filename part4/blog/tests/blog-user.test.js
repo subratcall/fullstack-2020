@@ -14,7 +14,7 @@ test('post user & blog', async () => {
 	const newUser = {
 		name: "Thivagar",
 		username: "root",
-		password: "pass",
+		password: "pass"
 	}
 	await api.post('/api/users').send(newUser)
 	const user = await User.find({})
