@@ -78,7 +78,6 @@ test('blog-api put', async () => {
 		.put('/api/blogs/5a422a851b54a676234d17f7')
 		.send(blog)
 		.expect(200)
-
 })
 
 afterAll(() => {
