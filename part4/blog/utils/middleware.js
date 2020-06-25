@@ -7,4 +7,14 @@ const errorHandler = (error, req, res, next) => {
 	next(error)
 }
 
-module.exports = { errorHandler }
+const tokenExtractor = (req, res, next) => {
+	const authorization = req.get('authorization')
+	let token = null
+	if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+		token = authorization.substring(7)
+		req.token = token
+	}
+	next()
+}
+
+module.exports = { errorHandler, tokenExtractor }
