@@ -1,0 +1,19 @@
+# POST http://localhost:3003/api/users
+# Content-Type: application/json
+
+# {
+# 	"name": "Thivagar",
+# 	"username": "root",
+# 	"password": "pass"
+# }
+
+# POST http://localhost:3003/api/login
+# Content-Type: application/json
+
+# {
+# 	"username": "root",
+# 	"password": "pass"
+# }
+
+DELETE http://localhost:3003/api/blogs/5ef4c4156d8be2208844588b
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlZjRiZDAwZDNiNDYxMWQ4ZTQ2MTIyYiIsImlhdCI6MTU5MzEwNzQ5Mn0.oHk_sQntaPKJveazr835L-0WUGxEjpKRX5NgXbplgz4
