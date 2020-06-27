@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 const Blog = ({ blog, update, remove }) => {
 	const addLike = () => {
 		update({
@@ -29,6 +31,12 @@ const Blog = ({ blog, update, remove }) => {
 		<button onClick={removeBlog}>Remove</button>
 
 	</div >)
+}
+
+Blog.propTypes = {
+	blog: PropTypes.object.isRequired,
+	update: PropTypes.func.isRequired,
+	remove: PropTypes.func.isRequired
 }
 
 export default Blog
