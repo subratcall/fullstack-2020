@@ -102,7 +102,8 @@ const App = () => {
 				<br />
 				{blogs.map(blog => {
 					return (
-						<Togglable textLabel={`${blog.title} `} showLabel="Show" hideLabel="Hide"
+						<Togglable textLabel={`${blog.title} ${blog.author}`}
+							showLabel="Show" hideLabel="Hide"
 							style={
 								{
 									border: "2px solid",

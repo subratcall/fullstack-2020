@@ -20,13 +20,11 @@ const Blog = ({ blog, update, remove }) => {
 	}
 
 	return (<div>
-		{blog.title}
+		{blog.title} {blog.author}
 		<br />
 		{blog.url}
 		<br />
 		{blog.likes} <button onClick={addLike}>Like</button>
-		<br />
-		{blog.author}
 		<br />
 		<button onClick={removeBlog}>Remove</button>
 
