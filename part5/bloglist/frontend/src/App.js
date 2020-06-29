@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,19 +14,19 @@ const App = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
+	const [notif, setNotif] = useState(null)
+	const [error, setError] = useState(false)
 
 	useEffect(() => {
 		blogService.getAll().then(blogs => {
 			blogs.sort((a, b) => b.likes - a.likes)
 			setBlogs(blogs)
-		}
-
-		)
+		})
 	}, [])
 
 	useEffect(() => {
 		const loggedUser = window.localStorage.getItem('user')
-		if (loggedUser) {
+		if (loggedUser && loggedUser !== 'undefined') {
 			const user = JSON.parse(loggedUser)
 			setUser(user)
 			blogService.setToken(user.token)
@@ -32,13 +35,23 @@ const App = () => {
 
 	const handleLogin = async event => {
 		event.preventDefault()
-
-		const user = await loginService.login({ username, password })
+		let user
+		try {
+			user = await loginService.login({ username, password })
+		} catch {
+			setNotif('Failed to log in: invalid credentials')
+			setError(true)
+			setTimeout(() => setNotif(null), 5000)
+			return
+		}
 		window.localStorage.setItem('user', JSON.stringify(user))
 		blogService.setToken(user.token)
 		setUser(user)
 		setUsername('')
 		setPassword('')
+		setNotif('Successfully logged in')
+		setError(false)
+		setTimeout(() => setNotif(null), 5000)
 	}
 
 	const handleLogout = () => {
@@ -60,8 +73,19 @@ const App = () => {
 	}
 
 	const addBlog = async (blog) => {
-		const addedBlog = await blogService.create(blog)
+		let addedBlog
+		try {
+			addedBlog = await blogService.create(blog)
+		} catch {
+			setNotif('Failed to add blog: missing fields')
+			setError(true)
+			setTimeout(() => setNotif(null), 5000)
+			return
+		}
 		setBlogs(blogs.concat(addedBlog))
+		setNotif('Successfully added blog')
+		setError(false)
+		setTimeout(() => setNotif(null), 5000)
 	}
 
 	const addLike = async (blog) => {
@@ -75,21 +99,36 @@ const App = () => {
 	}
 
 	const removeBlog = async (id) => {
-		await blogService.remove(id)
+		try {
+			await blogService.remove(id)
+		} catch {
+			setNotif('Unauthorized to remove blog')
+			setError(true)
+			setTimeout(() => setNotif(null), 5000)
+			return
+		}
+
+		setNotif('Successfully removed blog')
+		setError(false)
+		setTimeout(() => setNotif(null), 5000)
 		const newBlogs = blogs.filter(blog => blog.id !== id)
 		setBlogs(newBlogs)
 	}
 
 	if (user === null) {
 		return (
-			<LoginForm
-				username={username} password={password} handleSubmit={handleLogin}
-				handleChange={textChange}
-			/>
+			<>
+				<Notification message={notif} error={error} />
+				<LoginForm
+					username={username} password={password} handleSubmit={handleLogin}
+					handleChange={textChange}
+				/>
+			</>
 		)
 	} else {
 		return (
 			<>
+				<Notification message={notif} error={error} />
 				<h2>Blogs</h2>
 				<div>
 					{`${user.name} has logged in.`}
@@ -101,9 +140,10 @@ const App = () => {
 				</Togglable>
 				<br />
 				{blogs.map(blog => {
+					// console.log(blog)
 					return (
-						<Togglable textLabel={`${blog.title} ${blog.author}`}
-							showLabel="Show" hideLabel="Hide"
+						<Togglable key={blog.id} showLabel="Show" hideLabel="Hide"
+							textLabel={`${blog.title} ${blog.author}`}
 							style={
 								{
 									border: "2px solid",
