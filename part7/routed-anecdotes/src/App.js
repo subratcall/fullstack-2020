@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Switch, Route, Link, useRouteMatch, useHistory } from 'react-router-dom'
+import { useField } from './hooks'
 
 const Menu = () => {
 	const padding = {
@@ -20,8 +21,8 @@ const AnecdoteList = ({ anecdotes }) => (
 		<h2>Anecdotes</h2>
 		<ul>
 			{anecdotes.map(anecdote =>
-				<Link to={`/anecdotes/${anecdote.id}`}>
-					<li key={anecdote.id} >{anecdote.content}</li>
+				<Link to={`/anecdotes/${anecdote.id}`} key={anecdote.id}>
+					<li >{anecdote.content}</li>
 				</Link>
 			)}
 		</ul>
@@ -61,18 +62,17 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-	const [content, setContent] = useState('')
-	const [author, setAuthor] = useState('')
-	const [info, setInfo] = useState('')
-
+	const content = useField('content')
+	const author = useField('author')
+	const info = useField('info')
 
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		props.addNew({
-			content,
-			author,
-			info,
+			content: content.value,
+			author: author.value,
+			info: info.value,
 			votes: 0
 		})
 	}
@@ -82,18 +82,18 @@ const CreateNew = (props) => {
 			<h2>Create New Anecdote</h2>
 			<form onSubmit={handleSubmit}>
 				<div>
-					content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+					Content:
+          			<input {...content} />
 				</div>
 				<div>
-					author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+					Author:
+          			<input {...author} />
 				</div>
 				<div>
-					url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+					URL:
+          			<input {...info} />
 				</div>
-				<button style={{ 'margin-bottom': '1rem' }}>create</button>
+				<button style={{ 'marginBottom': '1rem' }}>create</button>
 			</form>
 		</div>
 	)
