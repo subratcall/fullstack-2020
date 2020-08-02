@@ -1,6 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-const Notification = ({ message, error }) => {
+const Notification = (props) => {
+	const message = props.notification.message
+	const error = props.notification.error
+
 	const style = {
 		borderRadius: '5px',
 		padding: '10px',
@@ -26,4 +30,8 @@ const Notification = ({ message, error }) => {
 	}
 }
 
-export default Notification
+const mapStateToProps = (state) => {
+	return { notification: state.notification }
+}
+
+export default connect(mapStateToProps, null)(Notification) 

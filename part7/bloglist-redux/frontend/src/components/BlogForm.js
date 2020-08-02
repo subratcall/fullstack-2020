@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotif } from '../reducers/notificationReducer'
 
-const BlogForm = ({ create }) => {
+const BlogForm = (props) => {
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
@@ -24,10 +26,14 @@ const BlogForm = ({ create }) => {
 
 	const addBlog = async event => {
 		event.preventDefault()
-		await create({ title, author, url })
+		props.createBlog({ title, author, url })
+			.then(() => props.setNotif("Successfully added blog", false, 5))
+			.catch(() => props.setNotif("Failed to add blog: missing fields", true, 5))
+
 		setTitle('')
 		setAuthor('')
 		setUrl('')
+
 	}
 
 	return (
@@ -50,6 +56,8 @@ const BlogForm = ({ create }) => {
 	)
 }
 
-BlogForm.propTypes = { create: PropTypes.func.isRequired }
+const mapDispatchToProps = {
+	createBlog, setNotif
+}
 
-export default BlogForm
+export default connect(null, mapDispatchToProps)(BlogForm)

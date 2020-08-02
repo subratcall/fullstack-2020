@@ -1,28 +1,69 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { connect } from 'react-redux'
 
-const LoginForm = ({ username, password, handleSubmit, handleChange }) => (
-	<form onSubmit={handleSubmit}>
-		<h2>Please login</h2>
-		<div>
-			Username:
-			<input id="user" type="text" name="Username"
-				value={username} onChange={handleChange}></input>
-		</div>
-		<div>
-			Password:
-			<input id="pass" type="text" name="Password"
-				value={password} onChange={handleChange}></input>
-		</div>
-		<button type="submit">Login</button>
-	</form>
-)
+import { login, setUser, clearUser } from '../reducers/loginReducer'
+import { setNotif } from '../reducers/notificationReducer'
 
-LoginForm.propTypes = {
-	username: PropTypes.string.isRequired,
-	password: PropTypes.string.isRequired,
-	handleSubmit: PropTypes.func.isRequired,
-	handleChange: PropTypes.func.isRequired
+const LoginForm = (props) => {
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
+
+	const handleLogin = async event => {
+		event.preventDefault()
+		props.login(username, password)
+			.then(() => {
+				props.setNotif("Successfully logged in", false, 5)
+			})
+			.catch(() => props.setNotif("Failed to log in: invalid credentials", true, 5))
+		setUsername('')
+		setPassword('')
+	}
+
+	const textChange = event => {
+		switch (event.target.name) {
+			case "Username":
+				setUsername(event.target.value)
+				break
+			case "Password":
+				setPassword(event.target.value)
+				break
+			default:
+				break
+		}
+	}
+
+	if (props.user === null) {
+		return (
+			<form onSubmit={handleLogin}>
+				<h2>Please login</h2>
+				<div>
+					Username:
+				<input id="user" type="text" name="Username"
+						value={username} onChange={textChange}></input>
+				</div>
+				<div>
+					Password:
+				<input id="pass" type="text" name="Password"
+						value={password} onChange={textChange}></input>
+				</div>
+				<button type="submit">Login</button>
+			</form>
+		)
+	} else {
+		return (
+			<div>
+				{`${props.user.name} has logged in.`}
+				<button onClick={props.clearUser}>Logout</button>
+			</div>
+		)
+	}
 }
 
-export default LoginForm
+const mapStateToProps = (state) => {
+	return { user: state.user }
+}
+
+const mapDispatchToProps = { login, setUser, clearUser, setNotif }
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

@@ -1,40 +1,41 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { addLike, deleteBlog } from '../reducers/blogReducer'
+import { setNotif } from '../reducers/notificationReducer'
 
-const Blog = ({ blog, update, remove }) => {
+const Blog = (props) => {
 	const addLike = () => {
-		update({
-			user: blog.user,
-			likes: blog.likes + 1,
-			author: blog.author,
-			title: blog.title,
-			url: blog.url,
-			id: blog.id
-		})
+		props.addLike(props.blog.id, props.blog)
+			.then(() => props.setNotif("Successfully updated blog", false, 5))
+			.catch(() => props.setNotif("Failed to update blog: not authorized", true, 5))
 	}
 
-	const removeBlog = () => {
+	const deleteBlog = () => {
 		if (window.confirm(
-			`Are you sure you want to delete "${blog.title}" by ${blog.author}?`
-		)) remove(blog.id)
+			`Are you sure you want to delete "${props.blog.title}" by ${props.blog.author}?`)
+		) {
+			props.deleteBlog(props.blog.id)
+				.then(() => props.setNotif("Successfully deleted blog", false, 5))
+				.catch(() => props.setNotif("Failed to delete blog: not authorized", true, 5))
+
+		}
 	}
 
 	return (<div>
-		{blog.title} {blog.author}
+		{props.blog.title} {props.blog.author}
 		<br />
-		{blog.url}
+		{props.blog.url}
 		<br />
-		{blog.likes} <button onClick={addLike}>Like</button>
+		{props.blog.likes} <button onClick={addLike}>Like</button>
 		<br />
-		<button onClick={removeBlog}>Remove</button>
+		<button onClick={deleteBlog}>Remove</button>
 
 	</div >)
 }
 
-Blog.propTypes = {
-	blog: PropTypes.object.isRequired,
-	update: PropTypes.func.isRequired,
-	remove: PropTypes.func.isRequired
+const mapDispatchToProps = {
+	addLike, deleteBlog, setNotif
 }
 
-export default Blog
+export default connect(null, mapDispatchToProps)(Blog)
+
