@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotif } from '../reducers/notificationReducer'
+import { initUsers } from '../reducers/userReducer'
 
 const BlogForm = (props) => {
 	const [title, setTitle] = useState('')
@@ -27,13 +28,15 @@ const BlogForm = (props) => {
 	const addBlog = async event => {
 		event.preventDefault()
 		props.createBlog({ title, author, url })
-			.then(() => props.setNotif("Successfully added blog", false, 5))
+			.then(() => {
+				props.setNotif("Successfully added blog", false, 5)
+				props.initUsers()
+			})
 			.catch(() => props.setNotif("Failed to add blog: missing fields", true, 5))
 
 		setTitle('')
 		setAuthor('')
 		setUrl('')
-
 	}
 
 	return (
@@ -52,12 +55,13 @@ const BlogForm = (props) => {
 			<input id="url" type="text" name="URL" value={url} onChange={textChange}></input>
 			</div>
 			<button type="submit">Add</button>
+
 		</form>
 	)
 }
 
 const mapDispatchToProps = {
-	createBlog, setNotif
+	createBlog, setNotif, initUsers
 }
 
 export default connect(null, mapDispatchToProps)(BlogForm)
