@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { Switch, Route, Link, useHistory } from 'react-router-dom'
+
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Menu from './components/Menu'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
@@ -31,15 +34,22 @@ const App = () => {
 	} else {
 		return (
 			<>
+				<Menu />
 				<Notification />
-				<h2>Blogs</h2>
-				<LoginForm />
-				<UserList />
-				<Togglable showLabel="New Blog" hideLabel="Cancel">
-					<BlogForm />
-				</Togglable>
+				<Switch>
+					<Route path="/blogs">
+						<h2>Blogs</h2>
+						<Togglable showLabel="New Blog" hideLabel="Cancel">
+							<BlogForm />
+						</Togglable>
+						<BlogList />
+					</Route>
+
+					<Route path="/users">
+						<UserList />
+					</Route>
+				</Switch>
 				<br />
-				<BlogList />
 			</>
 		)
 	}

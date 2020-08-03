@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import User from './User'
 
 const UserList = (props) => {
-	const match = useRouteMatch('/:userId')
+	const match = useRouteMatch('/users/:userId')
 	const user = match
 		? props.users.find(user => user.id === match.params.userId)
 		: null
@@ -17,10 +17,10 @@ const UserList = (props) => {
 	return (
 
 		<Switch>
-			<Route path="/:userId">
+			<Route path="/users/:userId">
 				<User user={user} />
 			</Route>
-			<Route path="/">
+			<Route path="/users">
 				<h2>Users</h2>
 				<table>
 					<thead>
@@ -36,7 +36,7 @@ const UserList = (props) => {
 							return (
 								<tr key={user.id}>
 									<td>
-										<Link to={`/${user.id}`}>{user.name}</Link>
+										<Link to={`users/${user.id}`}>{user.name}</Link>
 									</td>
 									<td>{user.blogs.length}</td>
 								</tr>

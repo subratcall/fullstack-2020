@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Blog from './Blog'
-import Togglable from './Togglable'
 import {
 	useRouteMatch,
 	Switch,
@@ -10,17 +9,17 @@ import {
 } from 'react-router-dom'
 
 const BlogList = (props) => {
-	const match = useRouteMatch('/:blogId')
+	const match = useRouteMatch('/blogs/:blogId')
 	const blog = match
 		? props.blogs.find(user => user.id === match.params.blogId)
 		: null
 
 	return (
 		<Switch>
-			<Route path="/:blogId">
+			<Route path="/blogs/:blogId">
 				<Blog blog={blog} />
 			</Route>
-			<Route path="/">
+			<Route path="/blogs">
 				{
 					props.blogs.map(blog => {
 						return (
@@ -30,7 +29,7 @@ const BlogList = (props) => {
 									margin: "0.5rem",
 									padding: "4px"
 								}}>
-								<Link to={`/${blog.id}`}>{blog.title}</Link>
+								<Link to={`blogs/${blog.id}`}>{blog.title}</Link>
 							</div>
 						)
 					})

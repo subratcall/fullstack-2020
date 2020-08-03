@@ -33,31 +33,23 @@ const LoginForm = (props) => {
 		}
 	}
 
-	if (props.user === null) {
-		return (
-			<form onSubmit={handleLogin}>
-				<h2>Please login</h2>
-				<div>
-					Username:
-				<input id="user" type="text" name="Username"
-						value={username} onChange={textChange}></input>
-				</div>
-				<div>
-					Password:
-				<input id="pass" type="text" name="Password"
-						value={password} onChange={textChange}></input>
-				</div>
-				<button type="submit">Login</button>
-			</form>
-		)
-	} else {
-		return (
+	return (
+		<form onSubmit={handleLogin}>
+			<h2>Please login</h2>
 			<div>
-				{`${props.user.name} has logged in.`}
-				<button onClick={props.clearUser}>Logout</button>
+				Username:
+				<input id="user" type="text" name="Username"
+					value={username} onChange={textChange}></input>
 			</div>
-		)
-	}
+			<div>
+				Password:
+				<input id="pass" type="text" name="Password"
+					value={password} onChange={textChange}></input>
+			</div>
+			<button type="submit">Login</button>
+		</form>
+	)
+
 }
 
 const mapStateToProps = (state) => {
