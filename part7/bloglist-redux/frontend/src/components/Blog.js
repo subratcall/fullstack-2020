@@ -25,17 +25,24 @@ const Blog = (props) => {
 		}
 	}
 
-	return (
-		<div>
-			{props.blog.title} {props.blog.author}
-			<br />
-			{props.blog.url}
-			<br />
-			{props.blog.likes} <button onClick={addLike}>Like</button>
-			<br />
-			<button onClick={deleteBlog}>Remove</button>
-		</div >
-	)
+	if (props.blog) {
+		return (
+			<div>
+				<h2>{props.blog.title}</h2>
+				<a href={`${props.blog.url}`}>{props.blog.url}</a>
+				<br />
+				{props.blog.likes} likes
+				<button onClick={addLike}>Like</button>
+				<br />
+				Added by {props.blog.author}
+				<br />
+				<button onClick={deleteBlog}>Remove</button>
+			</div >
+		)
+	} else {
+		return null
+	}
+
 }
 
 const mapDispatchToProps = {

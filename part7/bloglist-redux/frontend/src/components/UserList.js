@@ -15,39 +15,39 @@ const UserList = (props) => {
 		: null
 
 	return (
-		<>
-			<Switch>
-				<Route path="/:userId">
-					<User user={user} />
-				</Route>
-				<Route path="/">
-					<h2>Users</h2>
-					<table>
-						<thead>
 
-							<tr>
-								<th></th>
-								<th># of Blogs</th>
-							</tr>
-						</thead>
+		<Switch>
+			<Route path="/:userId">
+				<User user={user} />
+			</Route>
+			<Route path="/">
+				<h2>Users</h2>
+				<table>
+					<thead>
 
-						<tbody>
-							{props.users.map(user => {
-								return (
-									<tr key={user.id}>
-										<td>
-											<Link to={`/${user.id}`}>{user.name}</Link>
-										</td>
-										<td>{user.blogs.length}</td>
-									</tr>
-								)
-							})}
-						</tbody>
-					</table>
-					<br />
-				</Route>
-			</Switch>
-		</>
+						<tr>
+							<th></th>
+							<th># of Blogs</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{props.users.map(user => {
+							return (
+								<tr key={user.id}>
+									<td>
+										<Link to={`/${user.id}`}>{user.name}</Link>
+									</td>
+									<td>{user.blogs.length}</td>
+								</tr>
+							)
+						})}
+					</tbody>
+				</table>
+				<br />
+			</Route>
+		</Switch>
+
 	)
 }
 
