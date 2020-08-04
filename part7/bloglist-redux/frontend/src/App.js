@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Switch, Route, Link, useHistory } from 'react-router-dom'
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
 
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -16,6 +16,7 @@ import { initUser } from './reducers/loginReducer'
 import { initUsers } from './reducers/userReducer'
 
 const App = () => {
+	const history = useHistory()
 	const user = useSelector(state => state.user)
 	const dispatch = useDispatch()
 	useEffect(() => {
@@ -25,6 +26,7 @@ const App = () => {
 	}, [dispatch])
 
 	if (user === null) {
+		history.push("/")
 		return (
 			<>
 				<Notification />
@@ -34,8 +36,8 @@ const App = () => {
 	} else {
 		return (
 			<>
-				<Menu />
 				<Notification />
+				<Menu />
 				<Switch>
 					<Route path="/blogs">
 						<h2>Blogs</h2>
@@ -44,12 +46,13 @@ const App = () => {
 						</Togglable>
 						<BlogList />
 					</Route>
-
 					<Route path="/users">
 						<UserList />
 					</Route>
+					<Route path="/">
+						<Redirect to="/blogs" />
+					</Route>
 				</Switch>
-				<br />
 			</>
 		)
 	}
