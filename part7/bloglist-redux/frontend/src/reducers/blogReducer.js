@@ -2,7 +2,8 @@ import blogService from '../services/blogs'
 
 const INIT = 'INIT_BLOGS'
 const ADD = 'ADD_BLOG'
-const UPDATE = 'LIKE'
+const LIKE = 'UPDATE_LIKES'
+const COMMENT = 'UPDATE_COMMENTS'
 const DELETE = 'DELETE_BLOG'
 
 export const initBlogs = () => {
@@ -16,6 +17,7 @@ export const createBlog = (blog) => {
 	return async dispatch => {
 		const newBlog = await blogService.create(blog)
 		dispatch({ type: ADD, data: newBlog })
+		return newBlog
 	}
 }
 
@@ -24,7 +26,15 @@ export const addLike = (id, blog) => {
 		const newBlog = await blogService.update(
 			id, { ...blog, likes: blog.likes + 1 }
 		)
-		dispatch({ type: UPDATE, data: newBlog })
+		dispatch({ type: LIKE, data: newBlog })
+	}
+}
+
+//NEED TO FIX
+export const addComment = (blog, comment) => {
+	return async dispatch => {
+		const newBlog = await blogService.createComment(blog.id, comment)
+		dispatch({ type: COMMENT, data: newBlog })
 	}
 }
 
@@ -41,7 +51,8 @@ const reducer = (state = [], action) => {
 			return action.data
 		case ADD:
 			return state.concat(action.data)
-		case UPDATE:
+		case LIKE:
+		case COMMENT:
 			const newBlog = action.data
 			return state.map(b => b.id === newBlog.id ? newBlog : b)
 		case DELETE:

@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+
 import { createBlog } from '../reducers/blogReducer'
 import { setNotif } from '../reducers/notificationReducer'
 import { initUsers } from '../reducers/userReducer'
 
 const BlogForm = (props) => {
+	const history = useHistory()
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
@@ -28,9 +31,10 @@ const BlogForm = (props) => {
 	const addBlog = async event => {
 		event.preventDefault()
 		props.createBlog({ title, author, url })
-			.then(() => {
+			.then(blog => {
 				props.setNotif("Successfully added blog", false, 5)
 				props.initUsers()
+				history.push(`/blogs/${blog.id}`)
 			})
 			.catch(() => props.setNotif("Failed to add blog: missing fields", true, 5))
 

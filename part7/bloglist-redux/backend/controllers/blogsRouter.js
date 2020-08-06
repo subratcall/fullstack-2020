@@ -31,13 +31,33 @@ blogsRouter.post('/', async (req, res) => {
 		title: body.title,
 		url: body.url,
 		likes: body.likes,
-		user: user.id
+		user: user.id,
+		comments: []
 	})
 	const result = await blog.save()
 	user.blogs = user.blogs.concat(result._id)
 	await user.save()
 
 	res.status(201).json(result)
+})
+
+blogsRouter.post('/:id/comments', async (req, res) => {
+	const body = req.body
+	const token = req.token
+	const decodedToken = jwt.verify(token, process.env.SECRET)
+	if (!token || !decodedToken.id) {
+		return res.status(401).json({ error: 'token missing or invalid' })
+	}
+
+	if (!body) {
+		return res.status(400).end()
+	}
+
+	const blog = await Blog.findById(req.params.id)
+	blog.comments = blog.comments.concat(body.comment)
+	const result = await blog.save()
+
+	res.status(200).json(result)
 })
 
 blogsRouter.put('/:id', async (req, res) => {
@@ -57,11 +77,6 @@ blogsRouter.put('/:id', async (req, res) => {
 	}
 
 	const user = await User.findById(decodedToken.id)
-	const blog = await Blog.findById(req.params.id)
-
-	if (blog.user.toString() !== user._id.toString()) {
-		return res.status(401).json({ error: 'user not authorized to update' })
-	}
 
 	const formattedBlog = {
 		user: user._id,
@@ -94,7 +109,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 	user.blogs = userBlogs
 	await user.save()
 
-	res.status(204).json(result)
+	res.status(200).json(result)
 })
 
 module.exports = blogsRouter
