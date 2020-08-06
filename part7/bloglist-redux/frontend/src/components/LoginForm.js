@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { login, setUser, clearUser } from '../reducers/loginReducer'
 import { setNotif } from '../reducers/notificationReducer'
+import { Title, Button } from '../styles/styles'
 
 const LoginForm = (props) => {
 	const [username, setUsername] = useState('')
@@ -35,18 +36,18 @@ const LoginForm = (props) => {
 
 	return (
 		<form onSubmit={handleLogin}>
-			<h2>Please login</h2>
+			<Title>Please Login</Title>
 			<div>
-				Username:
-				<input id="user" type="text" name="Username"
-					value={username} onChange={textChange}></input>
+				<input id="user" type="text" name="Username" 
+					placeholder="Username" value={username} 
+					onChange={textChange}></input>
 			</div>
 			<div>
-				Password:
-				<input id="pass" type="text" name="Password"
-					value={password} onChange={textChange}></input>
+			<input id="user" type="text" name="Password" 
+					placeholder="Password" value={password} 
+					onChange={textChange}></input>
 			</div>
-			<button type="submit">Login</button>
+			<Button type="submit">Login</Button>
 		</form>
 	)
 

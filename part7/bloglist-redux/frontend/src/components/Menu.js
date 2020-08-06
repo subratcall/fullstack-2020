@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { clearUser } from '../reducers/loginReducer'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { MenuDiv, StyledLink } from '../styles/styles'
 
 const Menu = (props) => {
 	const history = useHistory()
@@ -12,12 +13,12 @@ const Menu = (props) => {
 	}
 
 	return (
-		<div style={{ background: 'lightgray' }}>
-			<Link to="/blogs">Blogs</Link>
-			<Link to="/users">Users</Link>
-			{`${props.user.name} has logged in.`}
+		<MenuDiv style={{ background: 'lightgray' }}>
+			<StyledLink to="/blogs">Blogs</StyledLink>
+			<StyledLink to="/users">Users</StyledLink>
+			<em>{` ${props.user.name} has logged in `}</em>
 			<button onClick={handleLogout}>Logout</button>
-		</div>
+		</MenuDiv>
 	)
 }
 

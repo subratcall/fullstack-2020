@@ -15,6 +15,8 @@ import { initBlogs } from './reducers/blogReducer'
 import { initUser } from './reducers/loginReducer'
 import { initUsers } from './reducers/userReducer'
 
+import { Title } from './styles/styles'
+
 const App = () => {
 	const history = useHistory()
 	const user = useSelector(state => state.user)
@@ -40,7 +42,7 @@ const App = () => {
 				<Menu />
 				<Switch>
 					<Route path="/blogs">
-						<h2>Blogs</h2>
+						<Title>Blogs</Title>
 						<Togglable showLabel="New Blog" hideLabel="Cancel">
 							<BlogForm />
 						</Togglable>
